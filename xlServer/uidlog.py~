@@ -1,0 +1,15 @@
+import codecs
+# -*- coding: utf-8 -*-
+
+class Suid:
+     def suid(self,uid,error,time,judge):
+         fp = codecs.open("logInfo/uidlog.txt","a")
+         #fp1 = codecs.open("logInfo/userInexist.txt","a")   #存储用户不存在的uid
+         fp2 = codecs.open("logInfo/userUnused.txt","a")    #存储未使用的uid
+         fp.write(uid+'\t'+error+'\t'+time+"\n")
+         fp2.write(uid+"\n")
+         #if judge == 1:
+            #fp1.write(uid+"\n")
+         fp.close()
+         #fp1.close()
+         fp2.close()

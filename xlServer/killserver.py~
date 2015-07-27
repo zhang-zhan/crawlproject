@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+import os
+#lines connect to popen_file's read
+lines = os.popen('ps -ef|grep python')
+for line in lines:
+	line = line.split()
+	if "xlServer.py" in line:  
+	    vars = line
+	    pid = vars[1] #get pid
+	    proc = ''.join(vars[7:]) #get proc description
+
+	    out = os.system('kill -9 '+pid)
+	    if out==0:
+	       print('success! kill '+pid+' '+proc)
+	    else:
+	       print('failed! kill '+pid+' '+proc)
+	    break
+
+
+    

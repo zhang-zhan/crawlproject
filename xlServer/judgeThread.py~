@@ -1,0 +1,44 @@
+#coding=utf-8
+__author__ = 'jiaodongdong'
+import datetime
+import time
+import xlServer
+
+def judgeThread():
+    sval = int(xlServer.MaxInterVal/10)
+    isEnd = True
+    while True:
+        isEnd = True
+        time.sleep(sval)
+        nowtime = int(time.mktime(time.strptime( time.strftime(xlServer.ISOTIMEFORMAT), xlServer.ISOTIMEFORMAT)))
+        for k, v in xlServer.lastRTime.iteritems():
+            if k not in xlServer.host:
+                if (nowtime - v) > 1.5*xlServer.MaxInterVal:
+                    xlServer.host[k] = 0
+                else:
+                    isEnd = False
+
+        if isEnd:
+            xlServer.allFinished = True
+            break
+
+#log
+    dt = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    fp = open("./logInfo/runlog.txt","w")
+    fp.write("finished" +"\r"+dt+"\n")
+    fp.close()
+    nowtime = int(time.mktime(time.strptime(time.strftime(xlServer.ISOTIMEFORMAT), xlServer.ISOTIMEFORMAT)))
+    Time = time.strftime('%Y-%m-%d')
+    zerotime = int(time.mktime(time.strptime(Time+" 00:00:00", xlServer.ISOTIMEFORMAT)))
+
+    stime = int(86400 - (nowtime - zerotime)/2)
+    time.sleep(stime)
+
+    """重启主机"""
+    xlServer.host.clear()
+    xlServer.lastRTime.clear()
+    xlServer.finished = 0
+    xlServer.allFinished = False
+    xlServer.MaxInterVal = 0
+    xlServer.notJudgeRun = True
+    xlServer.runJudge = -1
